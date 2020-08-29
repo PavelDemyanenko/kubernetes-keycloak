@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: oauth2-proxy
+  name: oauth2-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: oauth2-proxy
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/httpbin: "true"
+        io.kompose.network/keycloak: "true"
+        io.kompose.network/oauth2-proxy: "true"
+        io.kompose.service: oauth2-proxy
+    spec:
+      containers:
+      - args:
+        - --config
+        - ./oauth2-proxy.cfg
+        image: quay.io/oauth2-proxy/oauth2-proxy:v6.1.0
+        imagePullPolicy: ""
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+        resources: {}
+      hostname: oauth2-proxy
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

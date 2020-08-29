@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\pdemyane\Documents\PSA\frontend\psa-web-app\frontend\dev-tools\kompose.exe
+      convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: keycloak
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: keycloak
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/keycloak: "true"
+        io.kompose.service: keycloak
+    spec:
+      containers:
+      - args:
+        - -b
+        - 0.0.0.0
+        - -Djboss.socket.binding.port-offset=1000
+        - -Dkeycloak.migration.action=import
+        - -Dkeycloak.migration.provider=dir
+        - -Dkeycloak.migration.dir=/realm-config
+        - -Dkeycloak.migration.strategy=IGNORE_EXISTING
+        env:
+        - name: KEYCLOAK_PASSWORD
+          value: password
+        - name: KEYCLOAK_USER
+          value: admin@example.com
+        image: jboss/keycloak:10.0.0
+        imagePullPolicy: ""
+        name: keycloak
+        ports:
+        - containerPort: 9080
+        resources: {}
+      hostname: keycloak
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

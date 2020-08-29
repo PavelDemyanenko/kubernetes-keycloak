@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: httpbin
+  name: httpbin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: httpbin
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/httpbin: "true"
+        io.kompose.service: httpbin
+    spec:
+      containers:
+      - image: kennethreitz/httpbin:latest
+        imagePullPolicy: ""
+        name: httpbin
+        resources: {}
+      hostname: httpbin
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
