@@ -33,7 +33,7 @@ keycloak:
     tls:
       - hosts:
           - keycloak.localtest.me
-        secretName: tls-keycloak-czv9g
+        secretName:
 
 # oauth2-proxy:
 #   nameOverride: oauth2-proxy-sample
