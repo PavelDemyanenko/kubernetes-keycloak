@@ -2,9 +2,6 @@ keycloak:
   basepath: auth/
   username: admin
   password: password
-  route:
-    tls:
-      enabled: true
   extraEnv: |
     - name: PROXY_ADDRESS_FORWARDING
       value: "true"
@@ -24,16 +21,16 @@ keycloak:
   ingress:
     enabled: true
     annotations:
-      kubernetes.io/ingress.class: nginx
+      kubernetes.io/ingress.class: "nginx"
       nginx.ingress.kubernetes.io/use-regex: "true"
-      cert-manager.io/cluster-issuer: "keycloak-issuer"
+      cert-manager.io/cluster-issuer: "issuer-keycloak"
     path: /auth/?(.*)
     hosts:
       - keycloak.localtest.me
     tls:
       - hosts:
-          - keycloak.localtest.me
-        secretName:
+        - keycloak.localtest.me
+        secretName: tls-secret
 
 # oauth2-proxy:
 #   nameOverride: oauth2-proxy-sample

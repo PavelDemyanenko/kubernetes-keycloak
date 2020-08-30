@@ -1,13 +1,34 @@
-# cert.yaml
+---
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: tls-keycloak
+  name: selfsigned-crt
 spec:
-  secretName: tls-keycloak
-  dnsNames:
-  - keycloak.localtest.me
+  secretName: tls-secret
   issuerRef:
-    name: keycloak-issuer
     kind: Issuer
-    group: cert-manager.io
+    name: selfsigned
+  commonName: "keycloak.localtest.me"
+  dnsNames:
+  - "keycloak.localtest.me"
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: app
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+  - hosts:
+    - "keycloak.localtest.me"
+    secretName: tls-secret
+  rules:
+  - host: "keycloak.localtest.me"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app
+          servicePort: 8080

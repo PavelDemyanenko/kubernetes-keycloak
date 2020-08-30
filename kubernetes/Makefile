@@ -11,8 +11,8 @@ create-cluster:
 	make setup-ingress
 	make setup-cert
 	make create-keycloak-realm-secret
-	#make create-keycloak-tls-secret
-	#make create-keycloak-password-secret
+# make create-keycloak-tls-secret
+# make create-keycloak-password-secret
 
 .PHONY: create-keycloak-realm-secret
 create-keycloak-realm-secret:
@@ -63,13 +63,13 @@ undeploy:
 setup-cert:
 	kubectl create namespace cert-manager
 	kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.16.1/cert-manager.yaml
-	sleep 10
+	sleep 50
 	kubectl apply -f ../keycloak/certs/test-cert-manager.yaml
-	sleep 10
+	sleep 50
 	kubectl describe certificate -n cert-manager-test
-	sleep 10
+	sleep 50
 	kubectl create -f ../keycloak/certs/issuer.yaml
-	sleep 10
+	sleep 50
 	kubectl apply -f ../keycloak/certs/cert.yaml
 
 ######################
