@@ -9,11 +9,22 @@ create-cluster:
 	kind create cluster --name oauth2-proxy --config kind-cluster.yaml
 	make setup-dns
 	make setup-ingress
-	make create-keycloak-secret
+	make setup-cert
+	make create-keycloak-realm-secret
+	#make create-keycloak-tls-secret
+	#make create-keycloak-password-secret
 
-.PHONY: create-keycloak-secret
-create-keycloak-secret:
-	kubectl create secret generic realm-secret --from-file=./keycloak/master-realm.json
+.PHONY: create-keycloak-realm-secret
+create-keycloak-realm-secret:
+	kubectl create secret generic keycloak-realm-secret --from-file=../keycloak/realms/master-realm.json
+
+.PHONY: create-keycloak-tls-secret
+create-keycloak-tls-secret:
+	kubectl create secret tls tls-keycloak-ingress --cert=localtest.me.crt --key=localtest.me.pem
+
+.PHONY: create-keycloak-password-secret
+create-keycloak-password-secret:
+	kubectl create secret generic keycloak-admin-password --from-literal password=password
 
 .PHONY: setup-ingress
 setup-ingress:
@@ -44,6 +55,22 @@ deploy:
 .PHONY: undeploy
 undeploy:
 	kubectl delete -f oauth2-proxy-example-full.yaml
+
+######################
+###### CERTS CMDs #####
+######################
+.PHONY: setup-cert
+setup-cert:
+	kubectl create namespace cert-manager
+	kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.16.1/cert-manager.yaml
+	sleep 10
+	kubectl apply -f ../keycloak/certs/test-cert-manager.yaml
+	sleep 10
+	kubectl describe certificate -n cert-manager-test
+	sleep 10
+	kubectl create -f ../keycloak/certs/issuer.yaml
+	sleep 10
+	kubectl apply -f ../keycloak/certs/cert.yaml
 
 ######################
 ###### HELM CMDs #####

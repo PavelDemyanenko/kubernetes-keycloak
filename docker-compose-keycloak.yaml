@@ -53,7 +53,7 @@ services:
         '-Dkeycloak.migration.strategy=IGNORE_EXISTING',
       ]
     volumes:
-      - ./keycloak:/realm-config
+      - ./keycloak/realms:/realm-config
     environment:
       KEYCLOAK_USER: admin@example.com
       KEYCLOAK_PASSWORD: password
