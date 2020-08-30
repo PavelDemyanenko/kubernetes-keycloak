@@ -11,11 +11,11 @@ keycloak:
       value: >-
         -Djboss.socket.binding.port-offset=1000
   extraVolumes: |
-    - name: realm-secret
+    - name: keycloak-realm-secret
       secret:
-        secretName: realm-secret
+        secretName: keycloak-realm-secret
   extraVolumeMounts: |
-    - name: realm-secret
+    - name: keycloak-realm-secret
       mountPath: "/keycloak/"
       readOnly: true
   ingress:
