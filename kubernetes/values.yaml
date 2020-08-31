@@ -22,6 +22,8 @@ keycloak:
     httpGet:
       path: /auth/realms/master
       port: 9080
+    initialDelaySeconds: 30
+    timeoutSeconds: 30
   ingress:
     enabled: true
     annotations:
@@ -35,6 +37,11 @@ keycloak:
       - hosts:
         - keycloak.localtest.me
         secretName: tls-secret
+    rules:
+      - host: keycloak.localtest.me
+        paths:
+          - /
+
 
 # oauth2-proxy:
 #   nameOverride: oauth2-proxy-sample
