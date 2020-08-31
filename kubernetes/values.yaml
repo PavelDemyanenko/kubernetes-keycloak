@@ -18,6 +18,10 @@ keycloak:
     - name: keycloak-realm-secret
       mountPath: "/keycloak/"
       readOnly: true
+  readinessProbe: |
+    httpGet:
+      path: /auth/realms/master
+      port: 9080
   ingress:
     enabled: true
     annotations:
